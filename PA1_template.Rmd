@@ -7,6 +7,7 @@ output:
 ## Loading Libraries
 ```{r}
 library(dplyr)
+library(lattice)
 ```
 
 ## Loading and preprocessing the data
@@ -25,7 +26,7 @@ totalStepsPerDay <- tapply(dfActivity$steps, dfActivity$date, sum)
 
 ### Make a histogram of the total number of steps taken each day
 ```{r}
-hist(totalStepsPerDay, main ="Frequency Distribution of Total Steps Per Day", xlab="Steps Per Day")
+hist(totalStepsPerDay, main ="Frequency Distribution of Total Steps Per Day", xlab="Steps Per Day", breaks = 6)
 ```
 
 ### Calculate and report the mean and median of the total number of steps taken per day
@@ -57,15 +58,15 @@ My approach is to use the average number of steps by interval calculated above t
 
 ### Create a new dataset that is equal to the original dataset but with the missing data filled in.
 ```{r}
-dfmerge <- merge(dfActivity, avg_Steps_by_Interval, by.x = "interval", by.y= "interval")
-dfmerge$steps[is.na(dfmerge$steps) ] <- dfmerge$average_steps[is.na(dfmerge$steps) ]
+dfActivity <- merge(dfActivity, avg_Steps_by_Interval, by.x = "interval", by.y= "interval")
+dfActivity$steps[is.na(dfActivity$steps) ] <- dfActivity$average_steps[is.na(dfActivity$steps) ]
 ```
 
 ### Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? 
 ```{r}
-totalStepsPerDayImputed <- tapply(dfmerge$steps, dfmerge$date, sum)
+totalStepsPerDayImputed <- tapply(dfActivity$steps, dfActivity$date, sum)
 
-hist(totalStepsPerDayImputed, main ="Frequency Distribution of Total Steps Per Day", xlab="Steps Per Day")
+hist(totalStepsPerDayImputed, main ="Frequency Distribution of Total Steps Per Day", xlab="Steps Per Day", breaks=6)
 ```
 
 ```{r}
@@ -80,5 +81,13 @@ The impact of imputing the missing data with the daily average is to align the m
 
 ## Are there differences in activity patterns between weekdays and weekends?
 ### Create a new factor variable in the dataset with two levels – “weekday” and “weekend” indicating whether a given date is a weekday or weekend day.
+```{r}
+dfActivity <- mutate(dfActivity, day_type = factor((weekdays(date) %in% c("Saturday", "Sunday")), labels = c("Weekday", "Weekend")))
+```
 
 ###Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). See the README file in the GitHub repository to see an example of what this plot should look like using simulated data.
+```{r}
+avg_Steps_by_Interval <- group_by(dfActivity, interval, day_type) %>% summarize(mean(steps))
+names(avg_Steps_by_Interval) <- c("interval", "day_type", "average_steps")
+xyplot(average_steps ~ interval | day_type, data = avg_Steps_by_Interval, layout = c(1,2), type="l", ylab="Average Steps")
+```
