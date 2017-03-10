@@ -32,7 +32,7 @@ totalStepsPerDay <- tapply(dfActivity$steps, dfActivity$date, sum)
 hist(totalStepsPerDay, main ="Frequency Distribution of Total Steps Per Day", xlab="Steps Per Day", breaks = 6)
 ```
 
-![](PA1_template_files/figure-markdown_github/unnamed-chunk-4-1.png)
+![](PA1_template_files/figure-markdown_github/unnamed-chunk-5-1.png)
 
 #### Calculate and report the mean and median of the total number of steps taken per day
 
@@ -57,7 +57,7 @@ What is the average daily activity pattern?
 with(avg_Steps_by_Interval, plot(interval, average_steps, type='l', xlab='5-minute interval', ylab='Average Number of Steps'))
 ```
 
-![](PA1_template_files/figure-markdown_github/unnamed-chunk-6-1.png)
+![](PA1_template_files/figure-markdown_github/unnamed-chunk-7-1.png)
 
 #### Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
@@ -98,7 +98,7 @@ totalStepsPerDayImputed <- tapply(dfActivity$steps, dfActivity$date, sum)
 hist(totalStepsPerDayImputed, main ="Frequency Distribution of Total Steps Per Day", xlab="Steps Per Day", breaks=6)
 ```
 
-![](PA1_template_files/figure-markdown_github/unnamed-chunk-10-1.png)
+![](PA1_template_files/figure-markdown_github/unnamed-chunk-11-1.png)
 
 ``` r
 print(paste("The mean of the imputed steps per day is", as.character(mean(totalStepsPerDayImputed))))
@@ -119,7 +119,7 @@ The impact of imputing the missing data with the daily average is to align the m
 Are there differences in activity patterns between weekdays and weekends?
 -------------------------------------------------------------------------
 
-#### Create a new factor variable in the dataset with two levels â€“ â€œweekdayâ€ and â€œweekendâ€ indicating whether a given date is a weekday or weekend day.
+#### Create a new factor variable in the dataset with two levels â€“ weekday and weekend indicating whether a given date is a weekday or weekend day.
 
 ``` r
 dfActivity <- mutate(dfActivity, day_type = factor((weekdays(date) %in% c("Saturday", "Sunday")), labels = c("Weekday", "Weekend")))
@@ -130,7 +130,7 @@ dfActivity <- mutate(dfActivity, day_type = factor((weekdays(date) %in% c("Satur
 ``` r
 avg_Steps_by_Interval <- group_by(dfActivity, interval, day_type) %>% summarize(mean(steps))
 names(avg_Steps_by_Interval) <- c("interval", "day_type", "average_steps")
-xyplot(average_steps ~ interval | day_type, data = avg_Steps_by_Interval, layout = c(1,2), type="l", ylab="Average Steps")
+xyplot(average_steps ~ interval | day_type, data = avg_Steps_by_Interval, layout = c(1,2), type="l", ylab="Average Number of Steps")
 ```
 
-![](PA1_template_files/figure-markdown_github/unnamed-chunk-13-1.png)
+![](PA1_template_files/figure-markdown_github/unnamed-chunk-14-1.png)

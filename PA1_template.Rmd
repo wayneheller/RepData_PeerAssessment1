@@ -79,7 +79,7 @@ print(paste("The median of the imputed steps per day is", as.character(median(to
 The impact of imputing the missing data with the daily average is to align the median with the mean
 
 ## Are there differences in activity patterns between weekdays and weekends?
-#### Create a new factor variable in the dataset with two levels – “weekday” and “weekend” indicating whether a given date is a weekday or weekend day.
+#### Create a new factor variable in the dataset with two levels – weekday and weekend indicating whether a given date is a weekday or weekend day.
 ```{r}
 dfActivity <- mutate(dfActivity, day_type = factor((weekdays(date) %in% c("Saturday", "Sunday")), labels = c("Weekday", "Weekend")))
 ```
@@ -88,5 +88,5 @@ dfActivity <- mutate(dfActivity, day_type = factor((weekdays(date) %in% c("Satur
 ```{r}
 avg_Steps_by_Interval <- group_by(dfActivity, interval, day_type) %>% summarize(mean(steps))
 names(avg_Steps_by_Interval) <- c("interval", "day_type", "average_steps")
-xyplot(average_steps ~ interval | day_type, data = avg_Steps_by_Interval, layout = c(1,2), type="l", ylab="Average Steps")
+xyplot(average_steps ~ interval | day_type, data = avg_Steps_by_Interval, layout = c(1,2), type="l", ylab="Average Number of Steps")
 ```
